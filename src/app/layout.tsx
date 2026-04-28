@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "ClipCart | Recipe Clips to Instamart Baskets",
   description:
     "Turn cooking videos and Reels into Instamart-ready grocery baskets.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

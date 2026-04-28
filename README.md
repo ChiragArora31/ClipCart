@@ -1,55 +1,96 @@
 # ClipCart
 
-ClipCart turns cooking videos into an Instamart-ready grocery basket.
+Recipe clips to Instamart-ready baskets.
 
-People discover recipes on YouTube, Shorts, and Instagram Reels, but the next step is still manual: pause the video, find the ingredient list, guess quantities, search every item, and rebuild the basket from scratch. ClipCart compresses that entire flow into one product experience.
+ClipCart is an AI-native quick commerce prototype built for Swiggy Builders Club. Paste a cooking video, YouTube Short, or Instagram Reel, and ClipCart extracts the recipe context, identifies shoppable ingredients, and turns them into a polished draft Instamart basket.
 
-Paste a cooking video link, let the app extract the ingredients, review the suggested grocery list, and see a draft Instamart basket that is ready for checkout once Swiggy MCP access is available.
+The product is designed around one simple belief: the best next action after discovering a recipe is not saving it. It is getting the ingredients delivered.
 
-## Why this exists
+[Live demo](https://clipcart-theta.vercel.app) · [GitHub](https://github.com/ChiragArora31/ClipCart) · [Swiggy Builders Club](https://mcp.swiggy.com/builders/)
 
-Recipe discovery and grocery ordering are naturally connected, but they currently live in separate workflows. A user watches a recipe because they want to cook it. The most valuable next action is not saving the video, it is getting the ingredients delivered.
+![ClipCart home screen](public/readme/clipcart-home.png)
 
-ClipCart explores that bridge:
+## The problem
 
-- Creators and recipe videos become shoppable.
-- Users avoid manual ingredient planning.
-- Instamart becomes the natural continuation of food inspiration.
-- Swiggy MCPs can power the final cart and checkout step.
+Food discovery has moved to video. People find recipes on YouTube, Shorts, Instagram Reels, and creator-led cooking content every day.
 
-The current MVP focuses on accurate ingredient extraction and a polished cart preview. Checkout is intentionally locked in the UI and marked as requiring Swiggy MCP access.
+But the buying journey is still manual:
 
-## What it does
+- pause the video
+- find or infer the ingredients
+- guess quantities
+- search each item separately
+- compare packs and substitutions
+- rebuild the basket by hand
+
+ClipCart compresses that into one flow: video to ingredients to draft cart.
+
+## What ClipCart does
 
 - Accepts YouTube videos, YouTube Shorts, and public Instagram Reels.
-- Uses Gemini to understand the recipe and extract grocery-ready ingredients.
-- Uses an Instagram transcript provider for public Reel context.
-- Falls back to YouTube description text if direct video understanding is unavailable.
-- Shows the detected dish, serving context, extracted ingredients, confidence levels, and review notes.
-- Builds a draft Instamart-style basket with product rows, pack sizes, estimated prices, subtotal, and delivery ETA.
-- Provides a copyable ingredient list for the current non-MCP workflow.
-- Presents a locked "Checkout on Instamart" CTA to clearly communicate the intended Swiggy MCP integration.
+- Extracts dish name, cuisine, servings, ingredients, quantities, preparation notes, confidence, and review context.
+- Builds a draft Instamart-style basket with product rows, estimated pack sizes, prices, subtotal, and ETA.
+- Keeps checkout intentionally locked with `Requires Swiggy MCP access`, because the real next step is Instamart MCP integration.
+- Lets users copy the ingredient list while real checkout access is pending.
 
-## Product direction
+![ClipCart generated basket](public/readme/clipcart-results.png)
 
-ClipCart is designed as a Swiggy Builders Club product idea, not a generic AI demo. The goal is to show how Swiggy's commerce infrastructure can sit directly inside recipe discovery moments.
+## Why it matters
 
-With MCP access, the next version would:
+ClipCart turns recipe inspiration into purchase intent at the exact moment the user is most motivated.
 
-- Search Instamart inventory for each extracted ingredient.
-- Resolve pack sizes, substitutions, and availability by location.
-- Add selected items to a real cart.
-- Let users review and checkout through Swiggy's ecosystem.
+For users, it removes planning friction.
+
+For creators, it makes recipes shoppable.
+
+For Swiggy Instamart, it creates a natural bridge from food discovery to commerce.
+
+For MCPs, it is a clear example of an AI agent doing something useful in the real world: understanding messy media, structuring intent, matching it to commerce primitives, and preparing an action.
+
+## How it works
+
+```text
+Video/Reel URL
+  -> source detection
+  -> transcript/video/description context extraction
+  -> Gemini structured recipe extraction
+  -> ingredient normalization
+  -> draft Instamart basket
+  -> locked MCP checkout handoff
+```
+
+Under the hood:
+
+- YouTube videos and Shorts are analyzed with Gemini video/context understanding.
+- YouTube description text is used as a fallback when direct video analysis is unavailable.
+- Instagram Reels use transcript/context extraction for public Reels.
+- Gemini returns structured JSON for ingredients, quantities, confidence, missing context, and review notes.
+- The UI maps extracted ingredients into a draft cart preview that can later be replaced by real Instamart catalog and cart MCP calls.
+
+## MCP integration plan
+
+The app is already shaped around a future `InstamartClient` layer. Once Swiggy MCP access is available, the draft cart layer can be replaced with real calls for:
+
+- catalog search
+- SKU matching
+- pack-size resolution
+- inventory availability
+- substitutions
+- cart creation
+- checkout handoff
+
+The current locked checkout state is intentional. It communicates the intended integration clearly without pretending to have production Instamart access.
 
 ## Tech stack
 
-- Next.js App Router
+- Next.js 16 App Router
 - React
 - Tailwind CSS
 - Gemini API via `@google/genai`
 - Apify-based Instagram transcript extraction
+- Vercel deployment
 
-The app is intentionally lightweight: no database, no auth layer, and no unnecessary UI dependency stack.
+The project is intentionally lightweight: no database, no auth layer, and no heavy UI framework. The focus is the product flow, extraction quality, and MCP-readiness.
 
 ## Getting started
 
@@ -94,9 +135,9 @@ Never commit `.env.local`. The repository includes `.env.example` only as a temp
 ## Current limitations
 
 - Instamart checkout is not active yet because Swiggy MCP access is required.
-- Instagram extraction depends on public Reel availability and transcript/caption access.
-- Draft cart prices and pack sizes are estimated for the MVP experience; real values should come from Instamart APIs/MCPs.
-- If a video lacks enough recipe signal, ClipCart reports uncertainty instead of inventing missing ingredients.
+- Draft prices and pack sizes are estimated in the MVP. Real values should come from Instamart APIs/MCPs.
+- Instagram extraction depends on public Reel availability and accessible transcript/caption context.
+- If a source lacks enough recipe signal, ClipCart reports uncertainty instead of inventing missing ingredients.
 
 ## Scripts
 
@@ -107,6 +148,6 @@ npm run build
 npm run start
 ```
 
-## Repository
+## Built by
 
-GitHub: [ChiragArora31/ClipCart](https://github.com/ChiragArora31/ClipCart)
+Built by [Chirag Arora](https://www.linkedin.com/in/chirag-arora-3107/) for [Swiggy Builders Club](https://mcp.swiggy.com/builders/).
