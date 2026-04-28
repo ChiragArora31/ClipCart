@@ -711,6 +711,27 @@ export default function Home() {
             </div>
           </section>
         </div>
+
+        <footer className="pb-4 text-center text-sm text-white/45">
+          Built by{" "}
+          <a
+            href="https://www.linkedin.com/in/chirag-arora-3107/"
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-white/70 transition hover:text-orange-200"
+          >
+            Chirag Arora
+          </a>{" "}
+          for{" "}
+          <a
+            href="https://mcp.swiggy.com/builders/"
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-white/70 transition hover:text-orange-200"
+          >
+            Swiggy Builders Club
+          </a>
+        </footer>
       </section>
     </main>
   );
